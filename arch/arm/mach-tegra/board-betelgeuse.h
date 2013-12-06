@@ -37,7 +37,7 @@
 #define BETELGEUSE_GPU_MEM_SIZE 	SZ_128M			/* Memory reserved for GPU */
 
 #define BETELGEUSE_FB1_MEM_SIZE 	SZ_8M			/* Memory reserved for Framebuffer 1: LCD */
-#define BETELGEUSE_FB2_MEM_SIZE 	SZ_16M			/* Memory reserved for Framebuffer 2: HDMI out */
+#define BETELGEUSE_FB2_MEM_SIZE 	SZ_1M			/* Memory reserved for Framebuffer 2: HDMI out */
 
 #define BETELGEUSE_DOCK_GPIO		TEGRA_GPIO_PV2
 
