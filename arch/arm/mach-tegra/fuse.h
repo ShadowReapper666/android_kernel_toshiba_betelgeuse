@@ -46,8 +46,8 @@ int tegra_get_sku_override(void);
 #else
 static inline int tegra_package_id(void) { return -1; }
 static inline int tegra_cpu_speedo_id(void) { return 0; }
-static inline int tegra_cpu_speedo_mv(void) { return 1000; }
-static inline int tegra_core_speedo_mv(void) { return 1200; }
+static inline int tegra_cpu_speedo_mv(void) { return 1400; }
+static inline int tegra_core_speedo_mv(void) { return 1400; }
 #endif
 
 #else
@@ -58,7 +58,7 @@ static inline int tegra_cpu_speedo_id(void) { return 0; }
 static inline int tegra_soc_speedo_id(void) { return 0; }
 static inline int tegra_package_id(void) { return -1; }
 static inline int tegra_cpu_speedo_mv(void) { return 1000; }
-static inline int tegra_core_speedo_mv(void) { return 1200; }
+static inline int tegra_core_speedo_mv(void) { return 1400; }
 static inline void tegra_init_speedo_data(void) { }
 
 #endif
