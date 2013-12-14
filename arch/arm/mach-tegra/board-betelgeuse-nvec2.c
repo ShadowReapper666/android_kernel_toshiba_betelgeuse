@@ -34,7 +34,7 @@
 
 /* Power controller of Nvidia embedded controller platform data */
 static struct nvec_power_platform_data nvec_power_pdata = {
-//	.low_batt_irq = TEGRA_GPIO_TO_IRQ(BETELGEUSE_LOW_BATT),	/* If there is a low battery IRQ */
+	.low_batt_irq = TEGRA_GPIO_TO_IRQ(BETELGEUSE_LOW_BATT),	/* If there is a low battery IRQ */
 	.in_s3_state_gpio = BETELGEUSE_IN_S3,			/* Gpio pin used to flag that system is suspended */
 	.low_batt_alarm_percent = 5,				/* Percent of batt below which system is forcibly turned off */
 };

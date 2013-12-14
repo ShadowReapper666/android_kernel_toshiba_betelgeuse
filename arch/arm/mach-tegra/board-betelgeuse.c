@@ -176,7 +176,7 @@ static struct tegra_suspend_platform_data betelgeuse_suspend = {
 	.core_off_timer = 0x7f,
 	.corereq_high = false,
 	.sysclkreq_high = true,
-	.suspend_mode = TEGRA_SUSPEND_LP2,
+	.suspend_mode = TEGRA_SUSPEND_LP0,
 };
 
 static struct dock_platform_data dock_on_platform_data = {
