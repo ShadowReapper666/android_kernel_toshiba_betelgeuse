@@ -32,6 +32,8 @@
 #include <mach/iomap.h>
 #include <mach/dc.h>
 #include <mach/fb.h>
+#include <linux/fs.h>
+#include <asm/uaccess.h>
 
 #include "devices.h"
 #include "gpio-names.h"
@@ -46,6 +48,7 @@
 static struct regulator *betelgeuse_hdmi_reg = NULL;
 static struct regulator *betelgeuse_hdmi_pll = NULL;
 #endif
+static char resume_speed[7] = "1000000";
 
 static int betelgeuse_backlight_init(struct device *dev) {
 	int ret;
@@ -347,6 +350,31 @@ static void betelgeuse_panel_early_suspend(struct early_suspend *h)
 		pr_err("Early_suspend: Error changing governor to %s\n",
 				cpufreq_conservative_gov);
 #endif
+	/* save current maxspeed and go back to 1000*/
+	struct file *f;
+	struct file *fw;
+	struct file *fw2;
+	mm_segment_t fs;
+	mm_segment_t fsw;
+	mm_segment_t fsw2;
+	f = filp_open("/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq", O_RDONLY,0);
+	fs = get_fs();
+	set_fs(get_ds());
+	f->f_op->read(f, resume_speed, 7, &f->f_pos);
+	set_fs(fs);
+	filp_close(f,NULL);
+	fw = filp_open("/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq", O_WRONLY,0);
+	fsw = get_fs();
+	set_fs(get_ds());
+	fw->f_op->write(fw, "1000000", 7, &fw->f_pos);
+	set_fs(fsw);
+	filp_close(fw,NULL);
+	fw2 = filp_open("/sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq", O_WRONLY,0);
+        fsw2 = get_fs();
+        set_fs(get_ds());
+        fw2->f_op->write(fw2, "1000000", 7, &fw2->f_pos);
+        set_fs(fsw2);
+        filp_close(fw2,NULL);
 }
 
 static void betelgeuse_panel_late_resume(struct early_suspend *h)
@@ -358,6 +386,23 @@ static void betelgeuse_panel_late_resume(struct early_suspend *h)
 #endif
 	for (i = 0; i < num_registered_fb; i++)
 		fb_blank(registered_fb[i], FB_BLANK_UNBLANK);
+	/* restore original max speed of CPU */
+	struct file *fw;
+	struct file *fw2;
+	mm_segment_t fsw;
+	mm_segment_t fsw2;
+	fw = filp_open("/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq", O_WRONLY,0);
+	fsw = get_fs();
+	set_fs(get_ds());
+	fw->f_op->write(fw, resume_speed, 7, &fw->f_pos);
+	set_fs(fsw);
+	filp_close(fw,NULL);
+	fw2 = filp_open("/sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq", O_WRONLY,0);
+        fsw2 = get_fs();
+        set_fs(get_ds());
+        fw2->f_op->write(fw2, resume_speed, 7, &fw2->f_pos);
+        set_fs(fsw2);
+        filp_close(fw2,NULL);
 }
 #endif
 
